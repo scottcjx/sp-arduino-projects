@@ -9,47 +9,48 @@
 ``` c
 #define LED_PIN 13
 #define BTN_PIN 2
-
 #define BLINK_TIMES 5           
 #define BLINK_DELAY 500         // smaller number faster
 
 void setup()
 {
-    // Start serial connection
     Serial.begin(9600);
-    // Configure pin 2 as an input and enable the internal pull-up resistor
     pinMode(BTN_PIN, INPUT_PULLUP);
     pinMode(LED_PIN, OUTPUT);
 }
 
 void loop()
 {
-    // Read the pushbutton value into a variable 
     int sensorVal = digitalRead(BTN_PIN);
-
-    // Print out the value of the pushbutton Serial.
     println(sensorVal);
-    // Keep in mind the pull-up means the pushbutton's logic is inverted. 
-    // It goes HIGH when it's open, and LOW when it's pressed.
-    // Turn on pin LED_PIN when the button's pressed, and off when it's not:
     if (sensorVal == HIGH) 
     {
         digitalWrite(LED_PIN, LOW);
     } 
     else
     {
-        // Blink pin LED_PIN for 5 times 
         for (int i = 0; i < BLINK_TIMES; i++)
         {
-            digitalWrite(LED_PIN, HIGH); // Turn on the LED 
-            delay(BLINK_DELAY); // Wait for half a second 
-            digitalWrite(LED_PIN, LOW); // Turn off the LED
-            delay(BLINK_DELAY); // Wait for half a second
+            digitalWrite(LED_PIN, HIGH); 
+            delay(BLINK_DELAY); 
+            digitalWrite(LED_PIN, LOW);
+            delay(BLINK_DELAY);
         }
     }
-    // After blinking 5 times, turn off the LED digitalWrite(LED_PIN, LOW);
 }
 ```
+
+### Explanation
+- Code starts be defining respective pins of LED and Button; Number of times to blink and delay between OFF and ON state of LED.
+- In setup function, that is called once; upon power on of controller, pins are setup to their respective modes. Pull-Up input for button, and Output for LED. `Serial` is initialised with a baud rate of `9600`.
+- In loop function, function that runs continously after setup:
+    1. state of button is read and stored in `sensorVal`
+    2. `sensorVal` is printed to console.
+    3. if `sensorVal == HIGH`, meaning button is NOT depressed, LED state is set to low, if not already.
+    4. since `sensorVal` is mutually exclusive (the switch can only be HIGH or LOW), if `sensorVal == HIGH` is untrue, switch was depressed.
+        1. turn ON LED, wait for `BLINK_DELAY`
+        2. turn OFF LED, wait for `BLINK_DELAY`
+        3. repeat `BLINK_TIMES` times.
 
 ### Make Some Noise
 ``` c
@@ -59,7 +60,6 @@ void loop()
 #define BZR_PIN 8
 #define BTN_PIN 2
 
-// notes in the melody:
 int melody[] = {
   NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
 };
@@ -70,25 +70,17 @@ int noteDurations[] = {
 };
 
 void setup() {
-  //start serial connection
   Serial.begin(9600);
-  //configure pin 2 as an input and enable the internal pull-up resistor
   pinMode(BTN_PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT);
   pinMode(BZR_PIN, OUTPUT);
 }
 
 void loop() {
-  //read the pushbutton value into a variable
   int sensorVal = digitalRead(BTN_PIN);
-  //print out the value of the pushbutton
   Serial.println(sensorVal);
 
-  // Keep in mind the pull-up means the pushbutton's logic is inverted. It goes
-  // HIGH when it's open, and LOW when it's pressed. Turn on pin 13 when the
-  // button's pressed, and off when it's not:
-  if (sensorVal == HIGH) {}
-  else 
+  if (sensorVal == LOW)
   {
     for (int i = 0; i < 8; i++)
     {
@@ -107,6 +99,20 @@ void loop() {
   }
 }
 ```
+
+#### Explanation
+- Code starts be defining respective pins of LED, Button and Buzzer;
+- In setup function, that is called once; upon power on of controller, pins are setup to their respective modes. Pull-Up input for button; Output for Buzzer. `Serial` is initialised with a baud rate of `9600`.
+- In loop function, function that runs continously after setup:
+    1. state of button is read and stored in `sensorVal`
+    2. `sensorVal` is printed to console.
+    3. if `sensorVal == LOW`, meaning button is depressed:
+        1. repeating 8 times,
+        2. calculate the `noteDuration` for current note in array
+        3. play this buzzer at this pitch for `noteDuration`
+        4. calculate the pause timing between notes, wait for this amount of time
+        5. stop playing the buzzer
+
 ### Servo
 ``` c
 #include <Servo.h>
@@ -115,37 +121,67 @@ void loop() {
 #define BTN_PIN 2
 #define SRV_PIN 9
 
-Servo myservo;  // create servo object to control a servo
-// twelve servo objects can be created on most boards
+#define MOVEFAST_DELAY 5
+#define MOVEFAST_STEPS 5
+#define MOVESLOW_DELAY 10
+#define MOVESLOW_STEPS 1
 
-int pos = 0;    // variable to store the servo position
+Servo myservo;
+int pos = 0;
 
 void setup() 
 {
-  myservo.attach(SRV_PIN);  // attaches the servo on pin 9 to the servo object
+  myservo.attach(SRV_PIN);
+
+  // move servo to 20 deg (fast)
+  for (; pos < 20; pos += MOVEFAST_STEPS)
+  {
+    myservo.write(pos);
+    delay(MOVEFAST_DELAY);
+  }
 }
 
 void loop()
 {
+  // Move Slowly from 20deg -> 150deg -> 20deg
+
   // Move from 20 degrees to 150 degrees slowly
-  for (pos = 20; pos <= 150; pos += 1)
+  for (; pos < 150; pos += MOVESLOW_STEPS)
   {
-    myservo.write(pos);     // tell servo to go to position in variable 'pos'
-    delay(10);              // waits 10ms for the servo to reach the position
+    myservo.write(pos);
+    delay(MOVESLOW_DELAY);
   }
 
   // Move from 150 degrees to 20 degrees slowly
-  for (pos = 150; pos >= 20; pos -= 1)
+  for (; pos > 20; pos -= MOVESLOW_STEPS)
   {
-    myservo.write(pos);     // tell servo to go to position in variable 'pos'
-    delay(10);              // waits 10ms for the servo to reach the position
+    myservo.write(pos);
+    delay(MOVESLOW_DELAY);
   }
 
-  // Move from 20 degrees to 150 degrees rapidly
-  for (pos = 20; pos <= 150; pos += 5)
+  // Move Fast from 20deg -> 150deg -> 20deg
+  // Move from 20 degrees to 150 degrees quickly
+  for (; pos < 150; pos += MOVEFAST_STEPS)
   {
-    myservo.write(pos);     // tell servo to go to position in variable 'pos'
-    delay(5);               // waits 5ms for the servo to reach the position
+    myservo.write(pos);
+    delay(MOVEFAST_DELAY);
+  }
+
+  // Move from 150 degrees to 20 degrees quickly
+  for (; pos > 20; pos -= MOVEFAST_STEPS)
+  {
+    myservo.write(pos);
+    delay(MOVEFAST_DELAY);
   }
 }
 ```
+
+#### Explanation
+- Code starts be defining Servo pin;
+- In setup function, that is called once; upon power on of controller, `Servo` pin is attached to an instance of `servo` using PWM library.
+    1. Move servo from 0deg to 20deg quickly
+- In loop function, function that runs continously after setup:
+    1. Move Servo from 20deg to 150deg slowly
+    2. Move Servo from 150deg to 20deg slowly
+    3. Move Servo from 20deg to 150deg quickly
+    4. Move Servo from 150deg to 20deg quickly

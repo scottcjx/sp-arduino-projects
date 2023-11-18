@@ -4,36 +4,56 @@
 #define BTN_PIN 2
 #define SRV_PIN 9
 
-Servo myservo;  // create servo object to control a servo
-// twelve servo objects can be created on most boards
+#define MOVEFAST_DELAY 5
+#define MOVEFAST_STEPS 5
+#define MOVESLOW_DELAY 10
+#define MOVESLOW_STEPS 1
 
-int pos = 0;    // variable to store the servo position
+Servo myservo;
+int pos = 0;
 
 void setup() 
 {
-  myservo.attach(SRV_PIN);  // attaches the servo on pin 9 to the servo object
+  myservo.attach(SRV_PIN);
+
+  // move servo to 20 deg (fast)
+  for (; pos < 20; pos += MOVEFAST_STEPS)
+  {
+    myservo.write(pos);
+    delay(MOVEFAST_DELAY);
+  }
 }
 
 void loop()
 {
+  // Move Slowly from 20deg -> 150deg -> 20deg
+
   // Move from 20 degrees to 150 degrees slowly
-  for (pos = 20; pos <= 150; pos += 1)
+  for (; pos < 150; pos += MOVESLOW_STEPS)
   {
-    myservo.write(pos);     // tell servo to go to position in variable 'pos'
-    delay(10);              // waits 10ms for the servo to reach the position
+    myservo.write(pos);
+    delay(MOVESLOW_DELAY);
   }
 
   // Move from 150 degrees to 20 degrees slowly
-  for (pos = 150; pos >= 20; pos -= 1)
+  for (; pos > 20; pos -= MOVESLOW_STEPS)
   {
-    myservo.write(pos);     // tell servo to go to position in variable 'pos'
-    delay(10);              // waits 10ms for the servo to reach the position
+    myservo.write(pos);
+    delay(MOVESLOW_DELAY);
   }
 
-  // Move from 20 degrees to 150 degrees rapidly
-  for (pos = 20; pos <= 150; pos += 5)
+  // Move Fast from 20deg -> 150deg -> 20deg
+  // Move from 20 degrees to 150 degrees quickly
+  for (; pos < 150; pos += MOVEFAST_STEPS)
   {
-    myservo.write(pos);     // tell servo to go to position in variable 'pos'
-    delay(5);               // waits 5ms for the servo to reach the position
+    myservo.write(pos);
+    delay(MOVEFAST_DELAY);
+  }
+
+  // Move from 150 degrees to 20 degrees quickly
+  for (; pos > 20; pos -= MOVEFAST_STEPS)
+  {
+    myservo.write(pos);
+    delay(MOVEFAST_DELAY);
   }
 }

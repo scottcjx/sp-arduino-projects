@@ -4,7 +4,6 @@
 #define BZR_PIN 8
 #define BTN_PIN 2
 
-// notes in the melody:
 int melody[] = {
   NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
 };
@@ -15,25 +14,17 @@ int noteDurations[] = {
 };
 
 void setup() {
-  //start serial connection
   Serial.begin(9600);
-  //configure pin 2 as an input and enable the internal pull-up resistor
   pinMode(BTN_PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT);
   pinMode(BZR_PIN, OUTPUT);
 }
 
 void loop() {
-  //read the pushbutton value into a variable
   int sensorVal = digitalRead(BTN_PIN);
-  //print out the value of the pushbutton
   Serial.println(sensorVal);
 
-  // Keep in mind the pull-up means the pushbutton's logic is inverted. It goes
-  // HIGH when it's open, and LOW when it's pressed. Turn on pin 13 when the
-  // button's pressed, and off when it's not:
-  if (sensorVal == HIGH) {}
-  else 
+  if (sensorVal == LOW)
   {
     for (int i = 0; i < 8; i++)
     {
