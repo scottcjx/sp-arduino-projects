@@ -1,11 +1,10 @@
-# Projects
-
-## Content
+## Projects
 1. [Blink](#Blink)
 2. [Make Some Noise](#Make-Some-Noise)
 3. [Servo](#Servo)
 
 ### Blink
+
 ``` c
 #define LED_PIN 13
 #define BTN_PIN 2
@@ -41,6 +40,7 @@ void loop()
 ```
 
 ### Explanation
+
 - Code starts be defining respective pins of LED and Button; Number of times to blink and delay between OFF and ON state of LED.
 - In setup function, that is called once; upon power on of controller, pins are setup to their respective modes. Pull-Up input for button, and Output for LED. `Serial` is initialised with a baud rate of `9600`.
 - In loop function, function that runs continously after setup:
@@ -53,6 +53,7 @@ void loop()
         3. repeat `BLINK_TIMES` times.
 
 ### Make Some Noise
+
 ``` c
 #include "pitches.h"
 
@@ -101,6 +102,7 @@ void loop() {
 ```
 
 #### Explanation
+
 - Code starts be defining respective pins of LED, Button and Buzzer;
 - In setup function, that is called once; upon power on of controller, pins are setup to their respective modes. Pull-Up input for button; Output for Buzzer. `Serial` is initialised with a baud rate of `9600`.
 - In loop function, function that runs continously after setup:
@@ -114,6 +116,7 @@ void loop() {
         5. stop playing the buzzer
 
 ### Servo
+
 ``` c
 #include <Servo.h>
 
@@ -177,6 +180,7 @@ void loop()
 ```
 
 #### Explanation
+
 - Code starts be defining Servo pin;
 - In setup function, that is called once; upon power on of controller, `Servo` pin is attached to an instance of `servo` using PWM library.
     1. Move servo from 0deg to 20deg quickly
