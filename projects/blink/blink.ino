@@ -1,4 +1,3 @@
-
 #define LED_PIN 13
 #define BTN_PIN 2
 
@@ -19,7 +18,8 @@ void loop()
     // Read the pushbutton value into a variable 
     int sensorVal = digitalRead(BTN_PIN);
 
-    // Print out the value of the pushbutton Serial.println(sensorVal);
+    // Print out the value of the pushbutton 
+    Serial.println(sensorVal);
     // Keep in mind the pull-up means the pushbutton's logic is inverted. 
     // It goes HIGH when it's open, and LOW when it's pressed.
     // Turn on pin LED_PIN when the button's pressed, and off when it's not:
